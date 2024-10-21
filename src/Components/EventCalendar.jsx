@@ -4,7 +4,7 @@ import CalendarGrid from './CalendarGrid';
 import EventModal from './EventModal';
 import WeatherWidget from './WeatherWidget';
 import SearchBar from './SearchBar';
-import { FaPlusCircle, FaCalendarAlt } from 'react-icons/fa'; // Example icons
+import { FaPlusCircle } from 'react-icons/fa'; 
 
 const EventCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -14,7 +14,7 @@ const EventCalendar = () => {
   const [editingEvent, setEditingEvent] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Load events from localStorage when the component mounts
+  // Load events from localStorage on initial render
   useEffect(() => {
     const storedEvents = localStorage.getItem('events');
     if (storedEvents) {
@@ -22,25 +22,28 @@ const EventCalendar = () => {
     }
   }, []);
 
-  // Save events to localStorage when the events array changes
+  // Save events to localStorage whenever they are updated
   useEffect(() => {
     if (events.length > 0) {
       localStorage.setItem('events', JSON.stringify(events));
     }
   }, [events]);
 
+  // Function to handle adding a new event
   const handleAddEvent = (newEvent) => {
     setEvents((prevEvents) => [...prevEvents, { ...newEvent, id: Date.now() }]);
     setIsModalOpen(false);
   };
 
+  // Function to handle updating an existing event
   const handleUpdateEvent = (updatedEvent) => {
     setEvents((prevEvents) =>
       prevEvents.map((event) => (event.id === updatedEvent.id ? updatedEvent : event))
     );
-    setIsModalOpen(false);
+    setIsModalOpen(true);
   };
 
+  // Function to handle deleting an event
   const handleDeleteEvent = (eventId) => {
     setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
     setIsModalOpen(false);
@@ -64,7 +67,10 @@ const EventCalendar = () => {
         <div className="mb-4 mt-2 md:mb-6 md:mt-4 flex items-center justify-between">
           <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           <button
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => {
+              setEditingEvent(null); 
+              setIsModalOpen(true); 
+            }}
             className="text-blue-500 hover:text-blue-600 transition-all duration-300 focus:outline-none flex items-center space-x-2">
             <FaPlusCircle className="w-6 h-6" />
             <span>Add Event</span>
@@ -79,22 +85,23 @@ const EventCalendar = () => {
           )}
           onDateClick={(date) => {
             setSelectedDate(date);
-            setIsModalOpen(true);
+            setEditingEvent(null);
+            setIsModalOpen(true); 
           }}
           onEventClick={(event) => {
-            setEditingEvent(event);
+            setEditingEvent(event);  
             setSelectedDate(new Date(event.date));
-            setIsModalOpen(true);
+            setIsModalOpen(true);   
           }}
         />
       </div>
 
-      {/* Modal for adding/editing events */}
+      {/* Event Modal */}
       <EventModal
         isOpen={isModalOpen}
         onClose={() => {
           setIsModalOpen(false);
-          setEditingEvent(null);
+          setEditingEvent(null); 
         }}
         onAdd={handleAddEvent}
         onUpdate={handleUpdateEvent}

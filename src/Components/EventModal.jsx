@@ -87,7 +87,11 @@ const EventModal = ({ isOpen, onClose, onAdd, onUpdate, onDelete, editingEvent, 
                 </div>
                 <div className="flex space-x-2">
                   <button
-                    onClick={() => onUpdate(event)}
+                    onClick={() => {
+                      setEventTitle(event.title);
+                      setEventDescription(event.description);
+                      onUpdate(event); 
+                    }}
                     className="text-blue-500 hover:text-blue-700 focus:outline-none"
                   >
                     Edit
