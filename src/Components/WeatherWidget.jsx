@@ -8,7 +8,7 @@ const WeatherWidget = () => {
   const [locationError, setLocationError] = useState(false);
 
   const fetchWeatherData = async (lat, lon) => {
-    const API_KEY = '0201c9e42fe83b0641a178a77bc8839e'; // Replace with your OpenWeatherMap API Key
+    const API_KEY = process.env.REACT_APP_OPENWEATHERMAP_API_KEY; 
     try {
       const response = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
