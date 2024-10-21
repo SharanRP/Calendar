@@ -4,6 +4,7 @@ import CalendarGrid from './CalendarGrid';
 import EventModal from './EventModal';
 import WeatherWidget from './WeatherWidget';
 import SearchBar from './SearchBar';
+import { FaPlusCircle, FaCalendarAlt } from 'react-icons/fa'; // Example icons
 
 const EventCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -17,7 +18,6 @@ const EventCalendar = () => {
   useEffect(() => {
     const storedEvents = localStorage.getItem('events');
     if (storedEvents) {
-      // Parse the events if they exist in localStorage
       setEvents(JSON.parse(storedEvents));
     }
   }, []);
@@ -47,25 +47,28 @@ const EventCalendar = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-200 via-white to-blue-200 flex flex-col items-center justify-center p-4 md:p-12 relative overflow-hidden transition-colors duration-1000">
+    <div className="min-h-screen bg-gradient-to-br from-red-200 via-white to-blue-200 flex flex-col items-center justify-center p-4 md:p-12 relative overflow-hidden transition-all duration-1000">
       {/* Weather Widget */}
       <div className="container mx-auto mb-4 md:mb-10 w-full">
         <WeatherWidget />
       </div>
 
-      <div className="container mx-auto mb-0 md:mb-10 w-full">
-        <WeatherWidget />
-      </div>
-
       {/* Main content */}
-      <div className="bg-white shadow-2xl rounded-xl w-full max-w-lg md:max-w-6xl p-4 md:p-8 relative z-10 backdrop-blur-sm bg-opacity-80 mt-4 md:mt-6">
+      <div className="bg-white shadow-2xl rounded-xl w-full max-w-lg md:max-w-6xl p-4 md:p-8 relative z-10 backdrop-blur-sm bg-opacity-90 mt-4 md:mt-6">
         <CalendarHeader
           currentDate={currentDate}
           onPrevMonth={() => setCurrentDate((prevDate) => new Date(prevDate.getFullYear(), prevDate.getMonth() - 1, 1))}
           onNextMonth={() => setCurrentDate((prevDate) => new Date(prevDate.getFullYear(), prevDate.getMonth() + 1, 1))}
         />
-        <div className="mb-4 mt-2 md:mb-6 md:mt-4">
+
+        <div className="mb-4 mt-2 md:mb-6 md:mt-4 flex items-center justify-between">
           <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="text-blue-500 hover:text-blue-600 transition-all duration-300 focus:outline-none flex items-center space-x-2">
+            <FaPlusCircle className="w-6 h-6" />
+            <span>Add Event</span>
+          </button>
         </div>
 
         <CalendarGrid
